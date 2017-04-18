@@ -15,13 +15,18 @@ class Dashboard extends React.Component {
     const wptUrl = this.props.profile.wptUrl
       ? (this.props.profile.wptUrl.indexOf('http') === 0 ? this.props.profile.wptUrl : null)
       : 'https://www.webpagetest.org'
-    const profileUrl = this.props.profile.parameters.url
+    const profileParams = this.props.profile.parameters
 
     const onClickPagespeed = function (event, data) {
       const index = data[0]._index
       const timestamp = timestamps[index]
       const result = results[timestamp]
-      const encodedUrl = encodeURIComponent(profileUrl)
+      if (profileParams.hasOwnProperty('url')) {
+        const encodedUrl = encodeURIComponent(profileParams.url)
+      } else {
+        const encodedUrl = ''
+      }
+
       const insightsUrl = `https://developers.google.com/speed/pagespeed/insights/?url=${encodedUrl}`
       const lighthouseUrl = `https://www.webpagetest.org/lighthouse.php?test=${result.id}`
 
@@ -121,7 +126,7 @@ class Dashboard extends React.Component {
           title="Content breakdown (requests)"
           yLabel="Requests"
         />
-        
+
         {videoFrames.length && wptUrl &&
           <div className="c-Section">
             <h3 className="c-Section__title">Latest filmstrip view</h3>
